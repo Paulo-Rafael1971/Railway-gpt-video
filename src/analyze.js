@@ -5,6 +5,7 @@ const fs = require('fs');
 
 const router = express.Router();
 
+// Configuração da AWS
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -20,7 +21,10 @@ router.post('/analyze', async (req, res) => {
     return res.status(400).json({ error: 'URL do vídeo é obrigatória!' });
   }
 
-  const filePath = `/tmp/video-${Date.now()}.mp4`;
+  // Define caminho e nome do arquivo temporário
+  const timestamp = Date.now();
+  const filePath = `/tmp/video-${timestamp}.mp4`;
+  const s3Key = `videos/video-${timestamp}.mp4`;
 
   try {
     console.log(`📥 Baixando vídeo de: ${video_url}`);
@@ -28,16 +32,12 @@ router.post('/analyze', async (req, res) => {
 
     const fileContent = fs.readFileSync(filePath);
 
-    const s3Key = `videos/video-${Date.now()}.mp4`;
-
-    const params = {
+    console.log(`🚀 Enviando para S3: ${s3Key}`);
+    await s3.upload({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: s3Key,
       Body: fileContent
-    };
-
-    console.log(`🚀 Enviando para S3: ${s3Key}`);
-    await s3.upload(params).promise();
+    }).promise();
 
     const url = s3.getSignedUrl('getObject', {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
