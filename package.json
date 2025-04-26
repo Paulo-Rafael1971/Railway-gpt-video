@@ -1,0 +1,14 @@
+{
+  "name": "gpt-video-processor-railway",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1316.0",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "yt-dlp-exec": "^1.1.4"
+  }
+}
