@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 app.use('/api', analyze);
 
 app.get('/', (req, res) => {
-  res.send('🚀 GPT Video Processor - Railway Version');
+  res.send('🚀 GPT Video Processor - Render Version');
 });
 
 app.listen(port, () => {
